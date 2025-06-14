@@ -1,0 +1,8 @@
+@prefix hist: <https://bronzemirror.dev/ontology#> .
+@prefix xuan: <https://bronzemirror.dev/xuanwumen#> .
+
+xuan:LiShiMin a hist:Person ;
+    hist:name "李世民" ;
+    hist:abstractTag "规则漏洞利用者" ;
+    hist:powerActual 0.75 ;
+    hist:modernEquivalent "颠覆式创新业务负责人" .

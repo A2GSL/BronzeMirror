@@ -1,0 +1,15 @@
+{
+  "@context": "https://schema.org",
+  "@type": "HistoricalEvent",
+  "name": "玄武门之变",
+  "temporalCoverage": "626-07-02",
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "玄武门",
+    "geo": {"latitude": 34.341, "longitude": 108.942}
+  },
+  "variables": [
+    {"name": "coreTeamLoss", "threshold": 0.6},
+    {"name": "powerRatio", "dangerZone": [1.5, 2.0]}
+  ]
+}
