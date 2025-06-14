@@ -1,0 +1,7 @@
+PREFIX hist: <https://bronzemirror.dev/ontology#>
+
+SELECT ?risk WHERE {
+    ?leader hist:powerActual ?power .
+    ?leader hist:coreTeamLoss ?loss .
+    BIND( IF(?loss > 0.6 && ?power < 0.8, "CRITICAL", "SAFE") AS ?risk )
+}
