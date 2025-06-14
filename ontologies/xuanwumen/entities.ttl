@@ -1,8 +1,213 @@
 @prefix hist: <https://bronzemirror.dev/ontology#> .
 @prefix xuan: <https://bronzemirror.dev/xuanwumen#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-xuan:LiShiMin a hist:Person ;
-    hist:name "李世民" ;
-    hist:abstractTag "规则漏洞利用者" ;
-    hist:powerActual 0.75 ;
-    hist:modernEquivalent "颠覆式创新业务负责人" .
+# 核心类定义
+hist:Person a owl:Class ; rdfs:label "人物" .
+hist:Organization a owl:Class ; rdfs:label "组织" .
+hist:Event a owl:Class ; rdfs:label "事件" .
+hist:Place a owl:Class ; rdfs:label "地点" .
+hist:Role a owl:Class ; rdfs:label "角色" .
+hist:Action a owl:Class ; rdfs:label "行为" .
+hist:CausalRelation a owl:Class ; rdfs:label "因果关系" .
+hist:PowerTransfer a owl:Class ; rdfs:label "权力转移" .
+
+# 核心属性定义
+hist:hasParticipant a owl:ObjectProperty ; rdfs:label "参与者" .
+hist:hasRole a owl:ObjectProperty ; rdfs:label "担任角色" .
+hist:occursAt a owl:ObjectProperty ; rdfs:label "发生地点" .
+hist:hasOutcome a owl:ObjectProperty ; rdfs:label "结果" .
+hist:causedBy a owl:ObjectProperty ; rdfs:label "由...导致" .
+hist:involves a owl:ObjectProperty ; rdfs:label "涉及" .
+hist:killed a owl:ObjectProperty ; rdfs:label "杀害" .
+hist:succeededBy a owl:ObjectProperty ; rdfs:label "继任者" .
+hist:supports a owl:ObjectProperty ; rdfs:label "支持" .
+hist:opposes a owl:ObjectProperty ; rdfs:label "反对" .
+hist:commands a owl:ObjectProperty ; rdfs:label "指挥" .
+hist:belongsTo a owl:ObjectProperty ; rdfs:label "隶属于" .
+hist:time a owl:DatatypeProperty ; rdfs:label "时间" .
+
+# 关键实例举例
+xuan:XuanwumenIncident a hist:Event ;
+    rdfs:label "宣武门之变" ;
+    hist:occursAt xuan:Xuanwumen ;
+    hist:time "626-07-02" ;
+    hist:hasParticipant xuan:LiShiMin, xuan:LiJianCheng, xuan:LiYuanJi ;
+    hist:hasOutcome xuan:LiShiMinSuccess .
+
+xuan:Xuanwumen a hist:Place ; rdfs:label "宣武门" .
+
+xuan:LiShiMin a hist:Person ; hist:name "李世民" .
+xuan:LiJianCheng a hist:Person ; hist:name "李建成" .
+xuan:LiYuanJi a hist:Person ; hist:name "李元吉" .
+
+xuan:LiShiMinSuccess a hist:PowerTransfer ;
+    rdfs:label "李世民掌权" ;
+    hist:succeededBy xuan:LiShiMin .
+
+# 标注示例：宣武门之变关键行为与参与者
+xuan:XuanwumenIncident hist:hasParticipant xuan:ChangSunWuJi, xuan:YuChiJingDe .
+xuan:LiShiMin hist:killed xuan:LiJianCheng .
+xuan:YuChiJingDe hist:killed xuan:LiYuanJi .
+xuan:ChangSunWuJi a hist:Person ; hist:name "长孙无忌" .
+xuan:YuChiJingDe a hist:Person ; hist:name "尉迟敬德" .
+
+# 新增角色
+xuan:Guard a hist:Role ; rdfs:label "守卫" .
+
+# 新增人物
+xuan:FengLi a hist:Person ; hist:name "冯立" ; hist:hasRole xuan:Guard .
+xuan:JingJunHong a hist:Person ; hist:name "敬君弘" ; hist:hasRole xuan:Guard .
+xuan:LvShiHeng a hist:Person ; hist:name "吕世衡" ; hist:hasRole xuan:Guard .
+xuan:XueWanChe a hist:Person ; hist:name "薛万彻" .
+xuan:XieShuFang a hist:Person ; hist:name "谢叔方" .
+xuan:ZhangGongJin a hist:Person ; hist:name "张公谨" .
+
+# 组织
+xuan:XuanwumenGuards a hist:Organization ; rdfs:label "玄武门守军" .
+
+# 关系
+xuan:JingJunHong hist:belongsTo xuan:XuanwumenGuards .
+xuan:LvShiHeng hist:belongsTo xuan:XuanwumenGuards .
+xuan:FengLi hist:belongsTo xuan:EastPalace .
+xuan:XueWanChe hist:belongsTo xuan:EastPalace .
+xuan:XieShuFang hist:belongsTo xuan:EastPalace .
+xuan:ZhangGongJin hist:belongsTo xuan:QinWangFu .
+
+# 事件
+xuan:XuanwumenBattle a hist:Event ;
+    rdfs:label "玄武门激战" ;
+    hist:occursAt xuan:Xuanwumen ;
+    hist:hasParticipant xuan:JingJunHong, xuan:LvShiHeng, xuan:FengLi, xuan:XueWanChe, xuan:XieShuFang, xuan:ZhangGongJin ;
+    hist:time "626-07-02" ;
+    hist:hasOutcome xuan:QinWangVictory .
+
+# 结果
+xuan:QinWangVictory a hist:PowerTransfer ;
+    rdfs:label "秦王胜利" ;
+    hist:succeededBy xuan:LiShiMin .
+
+# 关键行为
+xuan:JingJunHong hist:killedBy xuan:FengLi .  # 冯立杀敬君弘
+xuan:LvShiHeng hist:killedBy xuan:FengLi .    # 冯立杀吕世衡
+xuan:ZhangGongJin hist:closed xuan:Xuanwumen . # 张公谨关闭玄武门
+
+# 组织补充
+xuan:EastPalace a hist:Organization ; rdfs:label "东宫" .
+
+# 角色补充
+xuan:Strategist a hist:Role ; rdfs:label "谋士" .
+xuan:General a hist:Role ; rdfs:label "将领" .
+
+# 人物与角色
+xuan:FangXuanLing a hist:Person ; hist:name "房玄龄" ; hist:hasRole xuan:Strategist .
+xuan:DuRuHui a hist:Person ; hist:name "杜如晦" ; hist:hasRole xuan:Strategist .
+xuan:GaoShiLian a hist:Person ; hist:name "高士廉" ; hist:hasRole xuan:General .
+xuan:HouJunJi a hist:Person ; hist:name "侯君集" ; hist:hasRole xuan:General .
+xuan:ChengZhiJie a hist:Person ; hist:name "程知节" ; hist:hasRole xuan:General .
+xuan:DuanZhiXuan a hist:Person ; hist:name "段志玄" ; hist:hasRole xuan:General .
+xuan:QinQiong a hist:Person ; hist:name "秦琼" ; hist:hasRole xuan:General .
+
+# 团队归属
+xuan:FangXuanLing hist:belongsTo xuan:QinWangFu .
+xuan:DuRuHui hist:belongsTo xuan:QinWangFu .
+xuan:GaoShiLian hist:belongsTo xuan:QinWangFu .
+xuan:HouJunJi hist:belongsTo xuan:QinWangFu .
+xuan:ChengZhiJie hist:belongsTo xuan:QinWangFu .
+xuan:DuanZhiXuan hist:belongsTo xuan:QinWangFu .
+xuan:QinQiong hist:belongsTo xuan:QinWangFu .
+
+# 关键事件
+xuan:ExpulsionOfStrategists a hist:Event ;
+    rdfs:label "房玄龄杜如晦被驱逐" ;
+    hist:hasParticipant xuan:FangXuanLing, xuan:DuRuHui, xuan:LiJianCheng ;
+    hist:time "626-06" ;
+    hist:hasOutcome xuan:StrategistsExpelled .
+
+xuan:StrategistsExpelled a hist:Action ; rdfs:label "谋士被驱逐" .
+
+xuan:RecallOfStrategists a hist:Event ;
+    rdfs:label "房玄龄杜如晦秘密召回" ;
+    hist:hasParticipant xuan:FangXuanLing, xuan:DuRuHui, xuan:ChangSunWuJi, xuan:YuChiJingDe ;
+    hist:time "626-07-01" ;
+    hist:causedBy xuan:StrategistsExpelled ;
+    hist:hasOutcome xuan:SecretCouncil .
+
+xuan:SecretCouncil a hist:Event ;
+    rdfs:label "秦王府密谋" ;
+    hist:hasParticipant xuan:LiShiMin, xuan:FangXuanLing, xuan:DuRuHui, xuan:ChangSunWuJi, xuan:YuChiJingDe, xuan:GaoShiLian, xuan:HouJunJi ;
+    hist:time "626-07-01" .
+
+xuan:ChengZhiJieExile a hist:Event ;
+    rdfs:label "程知节被外放" ;
+    hist:hasParticipant xuan:ChengZhiJie, xuan:LiYuanJi ;
+    hist:time "626-06" ;
+    hist:hasOutcome xuan:ChengZhiJieRemains .
+
+xuan:ChengZhiJieRemains a hist:Action ; rdfs:label "誓死不离京" .
+
+xuan:YuChiJingDeImprisonment a hist:Event ;
+    rdfs:label "尉迟敬德被陷害入狱" ;
+    hist:hasParticipant xuan:YuChiJingDe, xuan:LiYuanJi ;
+    hist:time "626-06" ;
+    hist:hasOutcome xuan:YuChiJingDeRescued .
+
+xuan:YuChiJingDeRescued a hist:Action ; rdfs:label "李世民营救尉迟敬德" .
+
+# 因果链
+xuan:RecallOfStrategists hist:causedBy xuan:ExpulsionOfStrategists .
+xuan:SecretCouncil hist:causedBy xuan:RecallOfStrategists .
+xuan:ChengZhiJieRemains hist:causedBy xuan:ChengZhiJieExile .
+xuan:YuChiJingDeRescued hist:causedBy xuan:YuChiJingDeImprisonment .
+
+# 关键行为
+xuan:ZhangGongJin hist:closed xuan:Xuanwumen .
+
+# 抽象角色
+bm:Leader a owl:Class ; rdfs:label "最高领导者" .
+bm:Successor a owl:Class ; rdfs:label "继任者" .
+bm:Rival a owl:Class ; rdfs:label "竞争者" .
+bm:Advisor a owl:Class ; rdfs:label "核心幕僚" .
+bm:Security a owl:Class ; rdfs:label "安全/守卫" .
+bm:PowerTransition a owl:Class ; rdfs:label "权力交接" .
+bm:Crisis a owl:Class ; rdfs:label "危机" .
+bm:Resolution a owl:Class ; rdfs:label "解决方案" .
+
+# 历史实例与抽象映射
+xuan:LiYuan a bm:Leader .
+xuan:LiShiMin a bm:Successor .
+xuan:LiJianCheng a bm:Rival .
+xuan:ChangSunWuJi a bm:Advisor .
+xuan:YuChiJingDe a bm:Security .
+xuan:XuanwumenIncident a bm:PowerTransition, bm:Crisis .
+xuan:QinWangVictory a bm:Resolution .
+
+# 变量属性定义
+hist:coreTeamLoss a owl:DatatypeProperty ; rdfs:label "核心团队流失率" .
+hist:powerRatio a owl:DatatypeProperty ; rdfs:label "权力比值" .
+hist:coreTeamLossThreshold a owl:DatatypeProperty ; rdfs:label "团队流失阈值" .
+hist:powerRatioDangerZone a owl:DatatypeProperty ; rdfs:label "权力比危险区间" .
+
+# 事件变量补充
+xuan:XuanwumenIncident hist:coreTeamLossThreshold 0.6 ;
+    hist:powerRatioDangerZone "1.5-2.0" .
+
+# 地理信息补充
+xuan:Xuanwumen hist:latitude "34.341" ; hist:longitude "108.942" .
+
+# 规则属性（可用于推理）
+hist:riskLevel a owl:DatatypeProperty ; rdfs:label "风险等级" .
+hist:advice a owl:DatatypeProperty ; rdfs:label "建议" .
+
+# 规则实例（示例）
+xuan:XuanwumenIncident hist:riskLevel "CRITICAL" ;
+    hist:advice "检查核心团队流失与权力失衡，防止关键节点失控" .
+
+# 关系属性补充
+hist:controls a owl:ObjectProperty ; rdfs:label "控制" .
+hist:betrays a owl:ObjectProperty ; rdfs:label "背叛" .
+
+# 关系实例补充
+xuan:LiShiMin hist:controls xuan:XuanWuGate .
+xuan:ChangHe hist:betrays xuan:LiJianCheng .
